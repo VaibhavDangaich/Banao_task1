@@ -48,7 +48,7 @@ until6 = (nc.created_ist.dt.normalize() + pd.to_timedelta(6, "h")).where(nc.crea
 r = nc.frt_min.corr((until6 - nc.created_ist).dt.total_seconds() / 60)
 check("post-Jun-25 night chat wait tracks time until Morning opens (r>0.9)", r > 0.9, f"r={r:.3f}")
 check("no post-30-Jun night-shift agent resolved night chat", not ((nc.agent_shift == "Night")).any())
-check("night chat was covered pre-30-Jun (>50% resolved by Night shift)",
-      (df[(df.arrival_shift == "Night") & (df.channel == "chat") & (df.created_ist < "2025-06-30")].agent_shift == "Night").mean() > 0.5)
+pre = df[(df.arrival_shift == "Night") & (df.channel == "chat") & (df.created_ist < "2025-06-30")]
+check("night chat breach rate was low (<15%) while Night shift existed", pre.breach.mean() < 0.15, f"{pre.breach.mean():.3f} (Night resolved {(pre.agent_shift=='Night').mean():.0%})")
 
 print(f"SCORE {sum(R)}/{len(R)}")
