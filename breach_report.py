@@ -47,6 +47,8 @@ def summarise(df, keys):
     out = g.agg(tickets=("breach", "size"), breaches=("breach", "sum"),
                 inherited=("inherited", "sum")).reset_index()
     out["breach_rate"] = (out.breaches / out.tickets).round(3)
+    own = df[~df.inherited].groupby(keys).breach.mean().rename("own_rate").round(3)  # tickets that arrived on the agent's own shift
+    out = out.merge(own.reset_index(), on=keys, how="left")
     out["credit_inr"] = out.breaches * CREDIT_INR
     return out
 
