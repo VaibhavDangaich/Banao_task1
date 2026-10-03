@@ -3,7 +3,7 @@
     python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
     .venv/bin/python breach_report.py data out     # data/ holds the 8 pack files
     .venv/bin/python test_breach.py                # cross-check vs independent stdlib count
-    .venv/bin/python eval.py                       # 9 checks, prints SCORE 9/9
+    .venv/bin/python eval.py                       # 12 checks, prints SCORE 12/12
 
 Outputs in `out/`: `report.md`, `breaches_by_agent_week.csv`, `breaches_by_shift_week.csv`.
 
