@@ -42,4 +42,13 @@ print(f"INFO shift gap in mean agent breach rate: raw={gap('raw'):.3f} own-shift
 check("agent metric not confounded by shift (gap < 0.05)", gap("own") < 0.05)
 check("report exposes an own-shift (controllable) rate", "own_rate" in br.summarise(df, ["agent_id"]).columns)
 
+# 6 root-cause claim vs rival explanations (the "bigger" test): is the overnight breach a coverage gap?
+nc = df[(df.arrival_shift == "Night") & (df.channel == "chat") & (df.created_ist >= "2025-06-30")]
+until6 = (nc.created_ist.dt.normalize() + pd.to_timedelta(6, "h")).where(nc.created_ist.dt.hour < 6, nc.created_ist.dt.normalize() + pd.Timedelta(days=1, hours=6))
+r = nc.frt_min.corr((until6 - nc.created_ist).dt.total_seconds() / 60)
+check("post-Jun-25 night chat wait tracks time until Morning opens (r>0.9)", r > 0.9, f"r={r:.3f}")
+check("no post-30-Jun night-shift agent resolved night chat", not ((nc.agent_shift == "Night")).any())
+check("night chat was covered pre-30-Jun (>50% resolved by Night shift)",
+      (df[(df.arrival_shift == "Night") & (df.channel == "chat") & (df.created_ist < "2025-06-30")].agent_shift == "Night").mean() > 0.5)
+
 print(f"SCORE {sum(R)}/{len(R)}")
