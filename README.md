@@ -11,4 +11,4 @@ Decisions: de-dup on ticket_id (keep helpdesk row); timestamps UTC -> IST (+5:30
 breach = first response later than policy s3 target; roster joined by agent_id and date; every table is cut
 two ways: shift the ticket **arrived** in vs shift of the agent who **resolved** it.
 Sample output: `sample/report.md`.
-No LLM/paid calls at runtime; AI was used to build it (see submission-form.md).
+No LLM/paid calls at runtime; AI was used to build it.
